@@ -33,6 +33,7 @@
         <Reference Include="UnityEngine.CoreModule" HintPath="$(RW_REFERENCES)\UnityEngine.CoreModule.dll" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="KarmaControlOptions.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>

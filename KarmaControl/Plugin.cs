@@ -10,7 +10,7 @@ using SimpleButton = Menu.SimpleButton;
 
 namespace KarmaControl;
 
-[BepInPlugin("risottoman.karmacontrol", "Karma Control", "1.3.0")]
+[BepInPlugin("risottoman.karmacontrol", "Karma Control", "1.3.1")]
 public class Plugin : BaseUnityPlugin
 {
     private bool _init;
@@ -18,6 +18,20 @@ public class Plugin : BaseUnityPlugin
     private HUD.KarmaMeter _meter;
     private Menu.PauseMenu _menu;
     private MenuLabel _menuLabel;
+    private KarmaControlOptions _options;
+    
+    public Plugin()
+    {
+        try
+        {
+            this._options = new KarmaControlOptions();
+        }
+        catch (Exception ex)
+        {
+            base.Logger.LogError(ex);
+            throw;
+        }
+    }
     
     private void OnEnable()
     {
@@ -35,6 +49,7 @@ public class Plugin : BaseUnityPlugin
                 PauseMenu.ctor += PauseMenuOnCtor;
                 PauseMenu.Singal += PauseMenuOnSingal;
                 KarmaMeter.ctor += KarmaMeterOnCtor;
+                MachineConnector.SetRegisteredOI("habbit.karmacontrol", this._options);
                 this._init = true;
             }
         }
@@ -63,6 +78,9 @@ public class Plugin : BaseUnityPlugin
         this._menu = self;
         
         if (game.session is not StoryGameSession)
+            return;
+        
+        if (this._options.Hide.Value)
             return;
         
         float height = 180.2f;
@@ -98,6 +116,9 @@ public class Plugin : BaseUnityPlugin
         orig(self, sender, message);
 
         if (this._game.session is not StoryGameSession)
+            return;
+        
+        if (this._options.Hide.Value)
             return;
         
         var data = this._game.GetStorySession.saveState.deathPersistentSaveData;
